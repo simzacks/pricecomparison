@@ -1,0 +1,53 @@
+{% load i18n %}
+
+<!DOCTYPE html>
+<html dir="rtl">
+    <head>
+        <meta charset="utf-8">
+        <title>
+            השוואות מחירים
+        </title>
+    </head>
+    <body>
+
+<form action="{% url 'compare_prices:search' %} method="post">
+    {% csrf_token %}
+בחר/י עיר: <select name="city" id="city>
+    {% for city in cities %}
+        <option name={{ city }}>{{ city }}</option>
+    {% endfor %}
+    </select>
+<br>
+פריט: <select name="itemname" id="itemname">
+<br>
+<input type="submit" value="חפש">
+</form>
+
+<p>
+{% if items %}
+<table border=1>
+    <tr>
+        <th>קוד פריט</th>
+        <th>פריט</th>
+        <th>כמות</th>
+        <th>יחידות</th>
+        <th>מחיר הנמוך</th>
+        <th>מחיר הגבוה</th>
+        <th>תוכן</th>
+    </tr>
+    {% for item in items %}
+    <tr>
+        <td>item.itemcode</td>
+        <td>item.itemname</td>
+        <td>item.quantity</td>
+        <td>item.unitqty</td>
+        <td>item.minprice</td>
+        <td>item.maxprice</td>
+        <td>item.details</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+</body>
+</html>
