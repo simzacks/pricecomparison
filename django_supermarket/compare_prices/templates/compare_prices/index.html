@@ -1,53 +1,113 @@
 {% load i18n %}
+{% load staticfiles %}
 
 <!DOCTYPE html>
 <html dir="rtl">
     <head>
         <meta charset="utf-8">
+        <script src="{% static "compare_prices/js/jquery-2.1.4.min.js" %}"></script>
+        <script src="{% static "compare_prices/js/jput.min.js" %}"></script>
+        <script src="{% static "compare_prices/js/supermarket.js" %}"></script>
+        <link rel="stylesheet" type="text/css" href="{% static "compare_prices/css/supermarket.css" %}">
         <title>
             השוואות מחירים
         </title>
     </head>
     <body>
 
-<form action="{% url 'compare_prices:search' %} method="post">
-    {% csrf_token %}
-בחר/י עיר: <select name="city" id="city>
+<div class="topofpage">
+<table border="0">
+    <tr>
+        <td>
+            <h1>השוואת מחירי מצרכים</h1>
+            <h2>מעלות - נהריה</h2>
+
+            תקלט/י שם המוצר<br>
+            <form id="search_form"  method="post" onsubmit="search_form(this); return false;">
+            {% csrf_token %}
+<!-- בחר/י עיר: <select name="city" id="city>
     {% for city in cities %}
-        <option name={{ city }}>{{ city }}</option>
+    <option name="{{ city.city }}">{{ city.city }}</option>
     {% endfor %}
     </select>
 <br>
-פריט: <select name="itemname" id="itemname">
-<br>
-<input type="submit" value="חפש">
-</form>
-
-<p>
-{% if items %}
-<table border=1>
-    <tr>
-        <th>קוד פריט</th>
-        <th>פריט</th>
-        <th>כמות</th>
-        <th>יחידות</th>
-        <th>מחיר הנמוך</th>
-        <th>מחיר הגבוה</th>
-        <th>תוכן</th>
+-->
+            פריט: <input name="search_term" id="search_term">
+            <br>
+            <input type="submit" value="חפש">
+            </form>
+        </td>
+        <td>
+        <table id="tbl_low_prices" border="1" align="center">
+          <tr>
+            <th id="store0" />
+            <th id="store1" />
+            <th id="store2" />
+          </tr>
+          <tr>
+            <td id="price0" />
+            <td id="price1" />
+            <td id="price2" />
+          </tr>
+        </table>
+        <button value = "לראות סל" onclick="return get_basket()">לראות סל</button>
+    </td>
     </tr>
-    {% for item in items %}
-    <tr>
-        <td>item.itemcode</td>
-        <td>item.itemname</td>
-        <td>item.quantity</td>
-        <td>item.unitqty</td>
-        <td>item.minprice</td>
-        <td>item.maxprice</td>
-        <td>item.details</td>
+</table>
+</div>
+    
+<p>
+<!-- {% verbatim %}
+<div jput="tbody_template">
+     <tr>
+        <td>{{itemcode}}</td>
+        <td>{{itemname}}</td>
+        <td>{{quantity}}</td>
+        <td>{{unitqty}}</td>
+        <td>{{minprice}}</td>
+        <td>{{maxprice}}</td>
+        <td>{{details}}</td>
+        <td><a href="#" onclick="addtobasket({{itemcode}}); return false;">הוסיף לסל</a></td>
+    </tr>
+</div>
+{% endverbatim %}
+-->
+<div id="item_div" class="undertop">
+    <table id="item_table" class="itemlist">
+        <thead>
+        <tr>
+            <th>קוד פריט</th>
+            <th>פריט</th>
+            <th>כמות</th>
+            <th>יחידות</th>
+            <th>מחיר הנמוך</th>
+            <th>מחיר הגבוה</th>
+            <th>תוכן</th>
+        </tr>
+    </thead>
+        <tbody id="item_details"></tbody>
+<!--
+        {% for item in items %}    
+     <tr>
+        <td>{{ item.itemcode }}</td>
+        <td>{{ item.itemname }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>{{ item.unitqty }}</td>
+        <td>{{ item.minprice }}</td>
+        <td>{{ item.maxprice }}</td>
+        <td>{% autoescape off %}{{ item.details }}{% endautoescape %}</td>
+        <td><a href="#" onclick="addtobasket({{ item.itemcode }}); return false;">הוסיף לסל</a></td>
     </tr>
     {% endfor %}
+-->
 </table>
-{% endif %}
+</div>
 
+<div id="basket_div" class="undertop">
+    <table id="basket_table" class="itemlist">
+        <thead id="basket_head" />
+        <tbody id="basket_body" />
+    </table>
+</div>
 </body>
 </html>

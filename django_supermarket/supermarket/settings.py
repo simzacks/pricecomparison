@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+#    'django_oneall',
     'compare_prices'
 )
 
@@ -50,6 +51,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 )
+
+#AUTHENTICATION_BACKENDS = ('django_oneall.auth.OneAllAuthBackend',)
 
 ROOT_URLCONF = 'supermarket.urls'
 

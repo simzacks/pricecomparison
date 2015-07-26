@@ -17,6 +17,6 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^compare_prices/', include('compare_prices.urls'))
+    url(r'^compare_prices/', include('compare_prices.urls', namespace="compare_prices"))
 ]
 
