@@ -113,3 +113,52 @@
 .undertop {
     margin-top: 210px;
 }
+
+input[type="number"] {
+       width:40px;
+   }
+
+.rightbar {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    float: right;
+    position: fixed;
+    width: 15%;
+    padding: 0 0 100%;
+    overflow: hidden;
+    border: none;
+    font: normal 12px/1 "Times New Roman", Times, serif;
+#    color: rgba(255,255,255,1);
+    text-align: center;
+    -o-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    background: #eeeeff;
+    -webkit-box-shadow: 1px 1px 1px 0 rgba(0,0,0,0.3) ;
+    box-shadow: 1px 1px 1px 0 rgba(0,0,0,0.3) ;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.2) ;
+}
+
+.leftgrid {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  float: left;
+  width: 84%;
+  padding: 0 0 100%;
+  overflow: hidden;
+  border: none;
+#  font: normal 16px/1 "Times New Roman", Times, serif;
+#  color: rgba(255,255,255,1);
+#  text-align: center;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+#  background: #0199d9;
+  -webkit-box-shadow: 1px 1px 1px 0 rgba(0,0,0,0.3) ;
+  box-shadow: 1px 1px 1px 0 rgba(0,0,0,0.3) ;
+  text-shadow: 1px 1px 1px rgba(0,0,0,0.2) ;
+}
+
+table, th, td {
+    direction: rtl;
+}

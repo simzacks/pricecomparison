@@ -6,7 +6,7 @@ from django.db import connection
 import json
 import datetime
 
-from .models import ChainStores, SearchResults, Baskets, SessionBasketStores, BasketSummary, Items, SessionBasketItems, SessionBasketDetails
+from .models import ChainStores, SearchResults, Baskets, SessionBasketStores, BasketSummary, Items, SessionBasketItems, SessionBasketDetails, BasketStores
 
 SQL_SEARCH_ITEMNAME = """select * from itemname_search_results('%s', %s)"""
 SQL_CITY_ARRAY = """(select array_agg(chainstoreid) from chainstores where city in ('מעלות', 'נהריה'))"""
@@ -41,22 +41,39 @@ def search(request):
 #    return render(request, "compare_prices/index.html", context)
     return HttpResponse(data, content_type='application/json')
 
+def getsummary(request):
+    results = BasketSummary.objects.filter(sessionid=request.session.session_key).order_by("-totalprice")[:3]
+    data = serializers.serialize("json", results)
+    return HttpResponse(data, content_type="application/json")
+
+
 def addtobasket(request):
     try:
         itemcode = request.POST["itemcode"]
+        qty = request.POST["qty"]
         cursor = connection.cursor()
         cursor.execute(SQL_INSERT_CITIES, [request.session.session_key, request.session.session_key])
-        Baskets.objects.create(sessionid=request.session.session_key, items=Items.objects.get(itemcode=itemcode))
+        Baskets.objects.create(sessionid=request.session.session_key, items=Items.objects.get(itemcode=itemcode), qty=qty)
         results = BasketSummary.objects.filter(sessionid=request.session.session_key).order_by("-totalprice")[:3]
         data = serializers.serialize("json", results)
     except KeyError as e:
         return HttpResponse(0)
-    return HttpResponse(data, content_type="application/json")
+    return getsummary(request)
 
 def getbasket(request):
-    stores = serializers.serialize("json", SessionBasketStores.objects.filter(sessionid=request.session.session_key))
+    parms = {"sessionid":request.session.session_key}
+    storeid = request.GET.get("chainstoreid", None)
+    if storeid:
+        parms["chainstoreid"] = storeid
+    stores = serializers.serialize("json", SessionBasketStores.objects.filter(**parms))
     items = serializers.serialize("json", SessionBasketItems.objects.filter(sessionid=request.session.session_key))
-    prices = serializers.serialize("json", SessionBasketDetails.objects.filter(sessionid=request.session.session_key))
-    results = {"stores": stores, "items": items, "prices": prices}
-    return HttpResponse(results, content_type="application/json")
+    prices = serializers.serialize("json", SessionBasketDetails.objects.filter(**parms))
+    totals = serializers.serialize("json", BasketSummary.objects.filter(**parms))
+    results = {"stores": stores, "items": items, "prices": prices, "totals": totals}
+    return HttpResponse(json.dumps(results), content_type="application/json")
+
+def clearbasket(request):
+    Baskets.objects.filter(sessionid=request.session.session_key).delete()
+    BasketStores.objects.filter(sessionid=request.session.session_key).delete()
+    return getsummary(request)
 

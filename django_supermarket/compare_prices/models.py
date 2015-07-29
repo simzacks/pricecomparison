@@ -37,6 +37,7 @@ class Baskets(models.Model):
     basketid = models.AutoField(primary_key=True)
     sessionid = models.TextField()
     items = models.ForeignKey('Items', db_column="itemcode")
+    qty = models.DecimalField(max_digits=10, decimal_places=2)
 
     class Meta:
         db_table = "baskets"
@@ -84,8 +85,8 @@ class SessionBasketItems(models.Model):
         db_table = "sessionbasketitems"
 
 class SessionBasketDetails(models.Model):
-    id = models.TextField(primary_key=True),
-    chainstoreid = models.IntegerField(),
+    fakepk = models.TextField(primary_key=True)
+    chainstoreid = models.IntegerField()
     itemcode = models.TextField()
     itemprice = models.DecimalField(max_digits=10, decimal_places=2)
     sessionid = models.TextField()
